@@ -3,32 +3,31 @@
 // found in the LICENSE file.
 
 import 'dart:io';
+import 'dart:math';
 
-import 'package:flutter_clock_helper/customizer.dart';
-import 'package:flutter_clock_helper/model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_clock_helper/customizer.dart';
+import 'package:provider/provider.dart';
+import 'package:vsync_provider/vsync_provider.dart';
 
 import 'analog_clock.dart';
+import 'model/model.dart';
 
 void main() {
-  // A temporary measure until Platform supports web and TargetPlatform supports
-  // macOS.
   if (!kIsWeb && Platform.isMacOS) {
-    // TODO(gspencergoog): Update this when TargetPlatform includes macOS.
-    // https://github.com/flutter/flutter/issues/31366
-    // See https://github.com/flutter/flutter/wiki/Desktop-shells#target-platform-override.
     debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia;
   }
-
-  // This creates a clock that enables you to customize it.
-  //
-  // The [ClockCustomizer] takes in a [ClockBuilder] that consists of:
-  //  - A clock widget (in this case, [AnalogClock])
-  //  - A model (provided to you by [ClockModel])
-  // For more information, see the flutter_clock_helper package.
-  //
-  // Your job is to edit [AnalogClock], or replace it with your own clock
-  // widget. (Look in analog_clock.dart for more details!)
-  runApp(ClockCustomizer((ClockModel model) => AnalogClock(model)));
+  runApp(ClockCustomizer(
+    (model) => MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(value: model),
+        VsyncProvider(),
+        ChangeNotifierProvider(
+          builder: (context) => TimerModel(vsync: VsyncProvider.of(context)),
+        )
+      ],
+      child: const Clock(),
+    ),
+  ));
 }

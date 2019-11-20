@@ -4,14 +4,56 @@
 
 import 'dart:async';
 
-import 'package:flutter_clock_helper/model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
+import 'package:flutter_clock_helper/model.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:vector_math/vector_math_64.dart' show radians;
 
 import 'container_hand.dart';
 import 'drawn_hand.dart';
+import 'model/model.dart';
+import 'widgets/widgets.dart';
+
+class Clock extends StatelessWidget {
+  const Clock({Key key}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    final model = Provider.of<TimerModel>(context, listen: false);
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: AspectRatio(
+          aspectRatio: 1,
+          child: Stack(
+            fit: StackFit.passthrough,
+            children: <Widget>[
+              AnimatedBuilder(
+                animation: model.secondAnimation,
+                builder: (context, child) {
+                  return Transform.rotate(
+                    angle: model.secondAnimation.value,
+                    child: child,
+                  );
+                },
+                child: const RepaintBoundary(child: ClockFace()),
+              ),
+              const RepaintBoundary(child: ClockHand()),
+              Align(
+                alignment: Alignment.topCenter,
+                child: const Padding(
+                  padding: EdgeInsets.only(top: 20),
+                  child: SecondText(),
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
 
 /// Total distance traveled by a second or a minute hand, each second or minute,
 /// respectively.
@@ -23,16 +65,16 @@ final radiansPerHour = radians(360 / 12);
 /// A basic analog clock.
 ///
 /// You can do better than this!
-class AnalogClock extends StatefulWidget {
-  const AnalogClock(this.model);
+class AnalogClock2 extends StatefulWidget {
+  const AnalogClock2(this.model);
 
   final ClockModel model;
 
   @override
-  _AnalogClockState createState() => _AnalogClockState();
+  _AnalogClock2State createState() => _AnalogClock2State();
 }
 
-class _AnalogClockState extends State<AnalogClock> {
+class _AnalogClock2State extends State<AnalogClock2> {
   var _now = DateTime.now();
   var _temperature = '';
   var _temperatureRange = '';
@@ -50,7 +92,7 @@ class _AnalogClockState extends State<AnalogClock> {
   }
 
   @override
-  void didUpdateWidget(AnalogClock oldWidget) {
+  void didUpdateWidget(AnalogClock2 oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.model != oldWidget.model) {
       oldWidget.model.removeListener(_updateModel);
@@ -70,7 +112,7 @@ class _AnalogClockState extends State<AnalogClock> {
       _temperature = widget.model.temperatureString;
       _temperatureRange = '(${widget.model.low} - ${widget.model.highString})';
       _condition = widget.model.weatherString;
-      _location = widget.model.location;
+      _location = widget.model.location as String;
     });
   }
 

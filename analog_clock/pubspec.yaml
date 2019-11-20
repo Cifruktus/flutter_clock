@@ -11,10 +11,12 @@ dependencies:
   flutter_clock_helper:
     path: ../flutter_clock_helper
   cupertino_icons: ^0.1.2
-
+  pedantic_mono:
+  provider:
+  simple_logger:
+  vsync_provider:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
 flutter:
   uses-material-design: true
