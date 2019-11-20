@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:analog_clock/util/util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -36,7 +35,6 @@ class _Painter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    logger.info('size: $size');
     final radius = size.width / 2;
     final center = Offset(radius, radius);
 

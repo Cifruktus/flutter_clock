@@ -1,4 +1,3 @@
-import 'package:analog_clock/util/util.dart';
 import 'package:flutter/material.dart';
 
 class ClockHand extends StatelessWidget {
@@ -16,7 +15,6 @@ class _Painter extends CustomPainter {
   final _path = Path();
   @override
   void paint(Canvas canvas, Size size) {
-    logger.info('size: $size');
     final radius = size.width / 2;
     final center = Offset(radius, radius);
     _path
