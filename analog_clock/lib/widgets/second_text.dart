@@ -4,6 +4,16 @@ import 'package:provider/provider.dart';
 
 class SecondText extends StatelessWidget {
   const SecondText({Key key}) : super(key: key);
+
+  static final _inTween = Tween<Offset>(
+    begin: const Offset(1, 0),
+    end: const Offset(0, 0),
+  );
+  static final _outTween = Tween<Offset>(
+    begin: const Offset(-1, 0),
+    end: const Offset(0, 0),
+  );
+
   @override
   Widget build(BuildContext context) {
     final model = Provider.of<TimerModel>(context);
@@ -17,37 +27,29 @@ class SecondText extends StatelessWidget {
           key: ValueKey(second),
           style: Theme.of(context).textTheme.title,
         ),
-//        layoutBuilder: (currentChild, previousChildren) => currentChild,
         transitionBuilder: (child, animation) {
-          final inAnimation =
-              Tween<Offset>(begin: const Offset(1, 0), end: const Offset(0, 0))
-                  .animate(animation);
-          final outAnimation =
-              Tween<Offset>(begin: const Offset(-1, 0), end: const Offset(0, 0))
-                  .animate(animation);
-
-          if (child.key == ValueKey(second)) {
-            return ClipRect(
-              child: SlideTransition(
-                position: inAnimation,
-                child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: child,
-                ),
-              ),
-            );
-          } else {
-            return ClipRect(
-              child: SlideTransition(
-                position: outAnimation,
-                child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: child,
-                ),
-              ),
-            );
-          }
+          return _buildTransition(
+            position: animation.drive(
+              child.key == ValueKey(second) ? _inTween : _outTween,
+            ),
+            child: child,
+          );
         },
+      ),
+    );
+  }
+
+  Widget _buildTransition({
+    @required Animation<Offset> position,
+    @required Widget child,
+  }) {
+    return ClipRect(
+      child: SlideTransition(
+        position: position,
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: child,
+        ),
       ),
     );
   }

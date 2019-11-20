@@ -24,7 +24,7 @@ class _Painter extends CustomPainter {
     }
     return TextPainter(
       text: TextSpan(
-          text: '${i}',
+          text: '$i',
           style: TextStyle(
             fontSize: 13,
             color: Colors.black,
@@ -37,6 +37,8 @@ class _Painter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final radius = size.width / 2;
     final center = Offset(radius, radius);
+    const gageRatio = 0.9;
+    const textRatio = 0.8;
 
     canvas.drawCircle(center, radius, _paint);
     for (final i in List.generate(_num, (i) => i)) {
@@ -47,8 +49,8 @@ class _Painter extends CustomPainter {
           radius * sin(radian) + center.dy,
         )
         ..lineTo(
-          radius * cos(radian) * 0.9 + center.dx,
-          radius * sin(radian) * 0.9 + center.dy,
+          radius * cos(radian) * gageRatio + center.dx,
+          radius * sin(radian) * gageRatio + center.dy,
         );
       canvas.drawPath(_path, _paint);
 
@@ -57,8 +59,12 @@ class _Painter extends CustomPainter {
         textPainter.paint(
           canvas,
           Offset(
-            radius * cos(radian) * 0.8 + center.dx - textPainter.width / 2,
-            radius * sin(radian) * 0.8 + center.dy - textPainter.height / 2,
+            radius * cos(radian) * textRatio +
+                center.dx -
+                textPainter.width / 2,
+            radius * sin(radian) * textRatio +
+                center.dy -
+                textPainter.height / 2,
           ),
         );
       }

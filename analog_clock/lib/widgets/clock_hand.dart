@@ -17,14 +17,17 @@ class _Painter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final radius = size.width / 2;
     final center = Offset(radius, radius);
+    const arrowYRatio = 0.1;
+    const arrowXRatio = 0.1;
+    const widthRatio = 0.025;
     _path
       ..moveTo(center.dx, 0)
-      ..lineTo(center.dx - radius / 10, radius / 10)
-      ..lineTo(center.dx - radius / 40, radius / 10)
-      ..lineTo(center.dx - radius / 40, center.dy)
-      ..lineTo(center.dx + radius / 40, center.dy)
-      ..lineTo(center.dx + radius / 40, radius / 10)
-      ..lineTo(center.dx + radius / 10, radius / 10);
+      ..lineTo(center.dx - radius * arrowXRatio, radius * arrowYRatio)
+      ..lineTo(center.dx - radius * widthRatio, radius * arrowYRatio)
+      ..lineTo(center.dx - radius * widthRatio, center.dy)
+      ..lineTo(center.dx + radius * widthRatio, center.dy)
+      ..lineTo(center.dx + radius * widthRatio, radius * arrowYRatio)
+      ..lineTo(center.dx + radius * arrowXRatio, radius * arrowYRatio);
 
     canvas.drawPath(_path, _paint);
   }
