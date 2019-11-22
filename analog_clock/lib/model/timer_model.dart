@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:analog_clock/model/clock_type.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
@@ -17,19 +18,33 @@ class TimerModel extends ChangeNotifier {
   Timer _timer;
 
   DateTime get now => _now;
-  Animation<double> get secondAnimation => _animationController.drive(
+
+  Animation<double> getAnimation({@required ClockType type}) {
+    switch (type) {
+      case ClockType.hour:
+        return _hourAnimation;
+      case ClockType.minute:
+        return _minuteAnimation;
+      case ClockType.second:
+        return _secondAnimation;
+    }
+    assert(false, 'Unexpected type: $type');
+    return null;
+  }
+
+  Animation<double> get _secondAnimation => _animationController.drive(
         Tween(
           begin: -2 * pi * (now.second - 0.5) / 60,
           end: -2 * pi * (now.second + 0.5) / 60,
         ),
       );
-  Animation<double> get minuteAnimation => _animationController.drive(
+  Animation<double> get _minuteAnimation => _animationController.drive(
         Tween(
           begin: -2 * pi * (now.minute + now.second / 60) / 60,
           end: -2 * pi * (now.minute + (now.second + 1) / 60) / 60,
         ),
       );
-  Animation<double> get hourAnimation => _animationController.drive(
+  Animation<double> get _hourAnimation => _animationController.drive(
         Tween(
           begin: -2 *
               pi *
