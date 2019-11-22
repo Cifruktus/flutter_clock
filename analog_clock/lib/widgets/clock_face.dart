@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:analog_clock/model/model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_clock_helper/model.dart';
+import 'package:provider/provider.dart';
 
 class ClockFace extends StatelessWidget {
   const ClockFace({
@@ -14,10 +16,12 @@ class ClockFace extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final model = Provider.of<ClockModel>(context);
     return CustomPaint(
       painter: _Painter(
         type: type,
         color: Theme.of(context).textTheme.body1.color,
+        is24HourFormat: model.is24HourFormat as bool,
       ),
     );
   }
@@ -27,29 +31,38 @@ class _Painter extends CustomPainter {
   _Painter({
     @required this.type,
     @required this.color,
-  })  : _num = _getNum(type),
+    @required this.is24HourFormat,
+  })  : _num = _getNum(
+          type: type,
+          is24HourFormat: is24HourFormat,
+        ),
         _textPainters = _getTextPainters(
           type: type,
           color: color,
+          is24HourFormat: is24HourFormat,
         ),
         _paint = Paint()
           ..style = PaintingStyle.stroke
           ..color = color;
 
   final Color color;
+  final bool is24HourFormat;
   final Paint _paint;
   final _path = Path();
   final int _num;
   final List<TextPainter> _textPainters;
   final ClockType type;
 
-  static int _getNum(ClockType type) {
+  static int _getNum({
+    @required ClockType type,
+    @required bool is24HourFormat,
+  }) {
     switch (type) {
       case ClockType.second:
       case ClockType.minute:
         return 60;
       case ClockType.hour:
-        return 24;
+        return is24HourFormat ? 24 : 12;
     }
     assert(false, 'Unexpected type: $type');
     return 0;
@@ -70,8 +83,13 @@ class _Painter extends CustomPainter {
   static List<TextPainter> _getTextPainters({
     @required ClockType type,
     @required Color color,
+    @required bool is24HourFormat,
   }) {
-    return List<TextPainter>.generate(_getNum(type), (i) {
+    return List<TextPainter>.generate(
+        _getNum(
+          type: type,
+          is24HourFormat: is24HourFormat,
+        ), (i) {
       if (i % _getSkipNum(type) != 0) {
         return null;
       }
@@ -126,5 +144,7 @@ class _Painter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_Painter oldDelegate) => oldDelegate.color != color;
+  bool shouldRepaint(_Painter oldDelegate) =>
+      oldDelegate.color != color ||
+      oldDelegate.is24HourFormat != is24HourFormat;
 }

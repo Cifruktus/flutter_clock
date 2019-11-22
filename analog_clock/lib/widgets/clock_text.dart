@@ -1,5 +1,6 @@
 import 'package:analog_clock/model/model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_clock_helper/model.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -22,13 +23,14 @@ class ClockText extends StatelessWidget {
   int _getValue(BuildContext context) {
     final model = Provider.of<TimerModel>(context);
     final now = model.now;
+    final clockModel = Provider.of<ClockModel>(context);
     switch (type) {
       case ClockType.second:
         return now.second;
       case ClockType.minute:
         return now.minute;
       case ClockType.hour:
-        return now.hour;
+        return clockModel.is24HourFormat as bool ? now.hour : now.hour % 12;
     }
     assert(false, 'Unexpected type: $type');
     return 0;
