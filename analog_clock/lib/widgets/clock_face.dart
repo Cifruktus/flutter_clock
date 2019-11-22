@@ -1,37 +1,76 @@
 import 'dart:math';
 
+import 'package:analog_clock/model/model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class ClockFace extends StatelessWidget {
-  const ClockFace({Key key}) : super(key: key);
+  const ClockFace({
+    Key key,
+    @required this.type,
+  }) : super(key: key);
+
+  final ClockType type;
+
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
-      painter: _Painter(),
+      painter: _Painter(type: type),
     );
   }
 }
 
 class _Painter extends CustomPainter {
+  _Painter({@required this.type})
+      : _num = _getNum(type),
+        _textPainters = _getTextPainters(type);
+
   final _paint = Paint()..style = PaintingStyle.stroke;
   final _path = Path();
-  static const _num = 60;
+  final int _num;
+  final List<TextPainter> _textPainters;
+  final ClockType type;
 
-  final _textPainters = List<TextPainter>.generate(_num, (i) {
-    if (i % 10 != 0) {
-      return null;
+  static int _getNum(ClockType type) {
+    switch (type) {
+      case ClockType.second:
+      case ClockType.minute:
+        return 60;
+      case ClockType.hour:
+        return 24;
     }
-    return TextPainter(
-      text: TextSpan(
-          text: '$i',
-          style: TextStyle(
-            fontSize: 13,
-            color: Colors.black,
-          )),
-      textDirection: TextDirection.ltr,
-    )..layout();
-  });
+    assert(false, 'Unexpected type: $type');
+    return 0;
+  }
+
+  static int _getSkipNum(ClockType type) {
+    switch (type) {
+      case ClockType.second:
+      case ClockType.minute:
+        return 10;
+      case ClockType.hour:
+        return 3;
+    }
+    assert(false, 'Unexpected type: $type');
+    return 0;
+  }
+
+  static List<TextPainter> _getTextPainters(ClockType type) {
+    return List<TextPainter>.generate(_getNum(type), (i) {
+      if (i % _getSkipNum(type) != 0) {
+        return null;
+      }
+      return TextPainter(
+        text: TextSpan(
+            text: '$i',
+            style: TextStyle(
+              fontSize: 13,
+              color: Colors.black,
+            )),
+        textDirection: TextDirection.ltr,
+      )..layout();
+    });
+  }
 
   @override
   void paint(Canvas canvas, Size size) {

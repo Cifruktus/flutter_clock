@@ -15,22 +15,58 @@ class Clock extends StatelessWidget {
     final model = Provider.of<TimerModel>(context, listen: false);
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(2),
         child: AspectRatio(
           aspectRatio: 1,
           child: Stack(
             fit: StackFit.passthrough,
             children: <Widget>[
-              AnimatedBuilder(
-                animation: model.secondAnimation,
-                builder: (context, child) {
-                  return Transform.rotate(
-                    angle: model.secondAnimation.value,
-                    child: child,
-                  );
-                },
-                child: const RepaintBoundary(
-                  child: ClockFace(),
+              FractionallySizedBox(
+                widthFactor: 0.95,
+                heightFactor: 0.95,
+                child: AnimatedBuilder(
+                  animation: model.hourAnimation,
+                  builder: (context, child) {
+                    return Transform.rotate(
+                      angle: model.hourAnimation.value,
+                      child: child,
+                    );
+                  },
+                  child: const RepaintBoundary(
+                    child: ClockFace(type: ClockType.hour),
+                  ),
+                ),
+              ),
+              FractionallySizedBox(
+                widthFactor: 0.65,
+                heightFactor: 0.65,
+                child: AnimatedBuilder(
+                  animation: model.minuteAnimation,
+                  builder: (context, child) {
+                    return Transform.rotate(
+                      angle: model.minuteAnimation.value,
+                      child: child,
+                    );
+                  },
+                  child: const RepaintBoundary(
+                    child: ClockFace(type: ClockType.minute),
+                  ),
+                ),
+              ),
+              FractionallySizedBox(
+                widthFactor: 0.35,
+                heightFactor: 0.35,
+                child: AnimatedBuilder(
+                  animation: model.secondAnimation,
+                  builder: (context, child) {
+                    return Transform.rotate(
+                      angle: model.secondAnimation.value,
+                      child: child,
+                    );
+                  },
+                  child: const RepaintBoundary(
+                    child: ClockFace(type: ClockType.second),
+                  ),
                 ),
               ),
               const RepaintBoundary(child: ClockHand()),
@@ -38,7 +74,21 @@ class Clock extends StatelessWidget {
                 alignment: Alignment.topCenter,
                 child: const Padding(
                   padding: EdgeInsets.only(top: 20),
-                  child: SecondText(),
+                  child: ClockText(type: ClockType.hour),
+                ),
+              ),
+              Align(
+                alignment: Alignment.topCenter,
+                child: const Padding(
+                  padding: EdgeInsets.only(top: 70),
+                  child: ClockText(type: ClockType.minute),
+                ),
+              ),
+              Align(
+                alignment: Alignment.topCenter,
+                child: const Padding(
+                  padding: EdgeInsets.only(top: 120),
+                  child: ClockText(type: ClockType.second),
                 ),
               )
             ],

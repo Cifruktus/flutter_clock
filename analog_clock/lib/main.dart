@@ -23,7 +23,9 @@ void main() {
         ChangeNotifierProvider.value(value: model),
         VsyncProvider(),
         ChangeNotifierProvider(
-          builder: (context) => TimerModel(vsync: VsyncProvider.of(context)),
+          builder: (context) => TimerModel(
+            vsync: VsyncProvider.of(context),
+          ),
         )
       ],
       child: const Clock(),
