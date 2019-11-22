@@ -37,8 +37,7 @@ class ClockText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final value = _getValue(context);
-    return Container(
-      color: Colors.grey[200],
+    return Card(
       child: AnimatedSwitcher(
         duration: const Duration(milliseconds: 200),
         child: Text(

@@ -38,21 +38,21 @@ class Clock extends StatelessWidget {
               Align(
                 alignment: Alignment.topCenter,
                 child: const Padding(
-                  padding: EdgeInsets.only(top: 20),
+                  padding: EdgeInsets.only(top: 16),
                   child: ClockText(type: ClockType.hour),
                 ),
               ),
               Align(
                 alignment: Alignment.topCenter,
                 child: const Padding(
-                  padding: EdgeInsets.only(top: 70),
+                  padding: EdgeInsets.only(top: 66),
                   child: ClockText(type: ClockType.minute),
                 ),
               ),
               Align(
                 alignment: Alignment.topCenter,
                 child: const Padding(
-                  padding: EdgeInsets.only(top: 120),
+                  padding: EdgeInsets.only(top: 116),
                   child: ClockText(type: ClockType.second),
                 ),
               )

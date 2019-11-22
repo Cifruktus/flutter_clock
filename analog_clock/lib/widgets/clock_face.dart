@@ -15,17 +15,29 @@ class ClockFace extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
-      painter: _Painter(type: type),
+      painter: _Painter(
+        type: type,
+        color: Theme.of(context).textTheme.body1.color,
+      ),
     );
   }
 }
 
 class _Painter extends CustomPainter {
-  _Painter({@required this.type})
-      : _num = _getNum(type),
-        _textPainters = _getTextPainters(type);
+  _Painter({
+    @required this.type,
+    @required this.color,
+  })  : _num = _getNum(type),
+        _textPainters = _getTextPainters(
+          type: type,
+          color: color,
+        ),
+        _paint = Paint()
+          ..style = PaintingStyle.stroke
+          ..color = color;
 
-  final _paint = Paint()..style = PaintingStyle.stroke;
+  final Color color;
+  final Paint _paint;
   final _path = Path();
   final int _num;
   final List<TextPainter> _textPainters;
@@ -55,7 +67,10 @@ class _Painter extends CustomPainter {
     return 0;
   }
 
-  static List<TextPainter> _getTextPainters(ClockType type) {
+  static List<TextPainter> _getTextPainters({
+    @required ClockType type,
+    @required Color color,
+  }) {
     return List<TextPainter>.generate(_getNum(type), (i) {
       if (i % _getSkipNum(type) != 0) {
         return null;
@@ -65,7 +80,7 @@ class _Painter extends CustomPainter {
             text: '$i',
             style: TextStyle(
               fontSize: 13,
-              color: Colors.black,
+              color: color,
             )),
         textDirection: TextDirection.ltr,
       )..layout();
@@ -111,5 +126,5 @@ class _Painter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) => false;
+  bool shouldRepaint(_Painter oldDelegate) => oldDelegate.color != color;
 }

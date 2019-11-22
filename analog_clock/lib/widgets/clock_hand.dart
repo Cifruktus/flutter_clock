@@ -5,14 +5,21 @@ class ClockHand extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
-      painter: _Painter(),
+      painter: _Painter(
+        color: Theme.of(context).textTheme.body1.color,
+      ),
     );
   }
 }
 
 class _Painter extends CustomPainter {
-  final _paint = Paint();
+  _Painter({
+    @required this.color,
+  }) : _paint = Paint()..color = color;
+  final Color color;
+  final Paint _paint;
   final _path = Path();
+
   @override
   void paint(Canvas canvas, Size size) {
     final radius = size.width / 2;
@@ -33,5 +40,5 @@ class _Painter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) => false;
+  bool shouldRepaint(_Painter oldDelegate) => oldDelegate.color != color;
 }
