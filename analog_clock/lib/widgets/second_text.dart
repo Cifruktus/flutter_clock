@@ -1,5 +1,6 @@
 import 'package:analog_clock/model/model.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class SecondText extends StatelessWidget {
@@ -14,6 +15,8 @@ class SecondText extends StatelessWidget {
     end: const Offset(0, 0),
   );
 
+  static final _format = NumberFormat('00');
+
   @override
   Widget build(BuildContext context) {
     final model = Provider.of<TimerModel>(context);
@@ -23,7 +26,7 @@ class SecondText extends StatelessWidget {
       child: AnimatedSwitcher(
         duration: const Duration(milliseconds: 200),
         child: Text(
-          '$second',
+          _format.format(second),
           key: ValueKey(second),
           style: Theme.of(context).textTheme.title,
         ),
