@@ -7,6 +7,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_clock_helper/customizer.dart';
+import 'package:flutter_clock_helper/model.dart';
 import 'package:provider/provider.dart';
 import 'package:vsync_provider/vsync_provider.dart';
 
@@ -22,10 +23,12 @@ void main() {
       providers: [
         ChangeNotifierProvider.value(value: model),
         VsyncProvider(),
-        ChangeNotifierProvider(
-          builder: (context) => TimerModel(
+        ChangeNotifierProxyProvider<ClockModel, TimerModel>(
+          initialBuilder: (context) => TimerModel(
             vsync: VsyncProvider.of(context),
           ),
+          builder: (context, clockModel, previous) =>
+              previous..clockModel = clockModel,
         )
       ],
       child: const Clock(),

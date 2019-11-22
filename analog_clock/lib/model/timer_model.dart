@@ -4,15 +4,18 @@ import 'dart:math';
 import 'package:analog_clock/model/clock_type.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_clock_helper/model.dart';
 
 class TimerModel extends ChangeNotifier {
-  TimerModel({@required TickerProvider vsync})
-      : _animationController = AnimationController(
+  TimerModel({
+    @required TickerProvider vsync,
+  }) : _animationController = AnimationController(
           vsync: vsync,
           duration: const Duration(seconds: 1),
         ) {
     _updateTime();
   }
+  ClockModel clockModel;
   final AnimationController _animationController;
   DateTime _now = DateTime.now();
   Timer _timer;
@@ -48,14 +51,16 @@ class TimerModel extends ChangeNotifier {
         Tween(
           begin: -2 *
               pi *
-              (now.hour * 60 + now.minute + now.second / 60) /
-              (60 * 24),
+              (now.hour % 12 * 60 + now.minute + now.second / 60) /
+              (60 * _get12Or24),
           end: -2 *
               pi *
-              (now.hour * 60 + now.minute + (now.second + 1) / 60) /
-              (60 * 24),
+              (now.hour % 12 * 60 + now.minute + (now.second + 1) / 60) /
+              (60 * _get12Or24),
         ),
       );
+
+  int get _get12Or24 => clockModel.is24HourFormat as bool ? 24 : 12;
 
   void _updateTime() {
     _now = DateTime.now();
