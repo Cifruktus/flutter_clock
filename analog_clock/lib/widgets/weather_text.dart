@@ -48,7 +48,7 @@ class WeatherText extends StatelessWidget {
             child: Icon(
               _weatherIcon(model.weatherCondition),
               color: _textColor,
-              size: Theme.of(context).textTheme.subhead.fontSize,
+              size: Theme.of(context).textTheme.headline.fontSize,
             ),
           ),
           const WidgetSpan(child: SizedBox(width: 8)),
