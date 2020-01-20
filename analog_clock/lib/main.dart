@@ -24,10 +24,10 @@ void main() {
         ChangeNotifierProvider.value(value: model),
         VsyncProvider(),
         ChangeNotifierProxyProvider<ClockModel, TimerModel>(
-          initialBuilder: (context) => TimerModel(
+          create: (context) => TimerModel(
             vsync: VsyncProvider.of(context),
           ),
-          builder: (context, clockModel, previous) =>
+          update: (context, clockModel, previous) =>
               previous..clockModel = clockModel,
         )
       ],

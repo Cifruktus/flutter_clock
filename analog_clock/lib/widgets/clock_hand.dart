@@ -6,7 +6,7 @@ class ClockHand extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomPaint(
       painter: _Painter(
-        color: Theme.of(context).textTheme.body1.color,
+        color: Colors.white,
       ),
     );
   }
@@ -24,17 +24,17 @@ class _Painter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final radius = size.width / 2;
     final center = Offset(radius, radius);
-    const arrowYRatio = 0.1;
-    const arrowXRatio = 0.1;
-    const widthRatio = 0.025;
+    const arrowXRatio = 0.05;
+    const arrowYRatio = 0.08;
+    const widthRatio = 0.01;
     _path
       ..moveTo(center.dx, 0)
-      ..lineTo(center.dx - radius * arrowXRatio, radius * arrowYRatio)
-      ..lineTo(center.dx - radius * widthRatio, radius * arrowYRatio)
-      ..lineTo(center.dx - radius * widthRatio, center.dy)
-      ..lineTo(center.dx + radius * widthRatio, center.dy)
-      ..lineTo(center.dx + radius * widthRatio, radius * arrowYRatio)
-      ..lineTo(center.dx + radius * arrowXRatio, radius * arrowYRatio);
+      ..relativeLineTo(-radius * arrowXRatio, radius * arrowYRatio)
+      ..relativeLineTo(radius * arrowXRatio - radius * widthRatio, 0)
+      ..relativeLineTo(0, size.height)
+      ..relativeLineTo(radius * widthRatio * 2, 0)
+      ..relativeLineTo(0, -size.height)
+      ..relativeLineTo(radius * arrowXRatio - radius * widthRatio, 0);
 
     canvas.drawPath(_path, _paint);
   }

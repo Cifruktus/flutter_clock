@@ -36,16 +36,55 @@ class ClockText extends StatelessWidget {
     return 0;
   }
 
+  Color get _textColor {
+    switch (type) {
+      case ClockType.hour:
+        return const Color(0xFF41ACB7);
+      case ClockType.minute:
+        return const Color(0xFF6EBCC3);
+      case ClockType.second:
+        return const Color(0xFF90D4D9);
+    }
+  }
+
+  TextStyle _baseTextStyle(BuildContext context) {
+    final theme = Theme.of(context).textTheme;
+    switch (type) {
+      case ClockType.hour:
+      case ClockType.minute:
+        return theme.headline;
+      case ClockType.second:
+        return theme.body1;
+    }
+  }
+
+  ShapeBorder get _shapeBorder {
+    switch (type) {
+      case ClockType.hour:
+      case ClockType.minute:
+        return RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        );
+      case ClockType.second:
+        return const StadiumBorder();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final value = _getValue(context);
     return Card(
+      elevation: 0,
+      shape: _shapeBorder,
       child: AnimatedSwitcher(
         duration: const Duration(milliseconds: 200),
         child: Text(
           _format.format(value),
           key: ValueKey(value),
-          style: Theme.of(context).textTheme.title,
+          style: _baseTextStyle(context).copyWith(
+            fontWeight: FontWeight.bold,
+            color: _textColor,
+          ),
         ),
         transitionBuilder: (child, animation) {
           return _buildTransition(

@@ -14,14 +14,31 @@ class ClockFace extends StatelessWidget {
 
   final ClockType type;
 
+  double get _opacity {
+    switch (type) {
+      case ClockType.hour:
+        return 0.3;
+      case ClockType.minute:
+        return 0.4;
+      case ClockType.second:
+        return 0.48;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final model = Provider.of<ClockModel>(context);
-    return CustomPaint(
-      painter: _Painter(
-        type: type,
-        color: Theme.of(context).textTheme.body1.color,
-        is24HourFormat: model.is24HourFormat as bool,
+    return Opacity(
+      opacity: _opacity,
+      child: CustomPaint(
+        painter: _Painter(
+          type: type,
+          color: Colors.white,
+          backgroundColor: Theme.of(context).brightness == Brightness.light
+              ? const Color(0xFFE37200)
+              : const Color(0xFF778C98),
+          is24HourFormat: model.is24HourFormat as bool,
+        ),
       ),
     );
   }
@@ -31,6 +48,7 @@ class _Painter extends CustomPainter {
   _Painter({
     @required this.type,
     @required this.color,
+    @required this.backgroundColor,
     @required this.is24HourFormat,
   })  : _num = _getNum(
           type: type,
@@ -43,11 +61,14 @@ class _Painter extends CustomPainter {
         ),
         _paint = Paint()
           ..style = PaintingStyle.stroke
-          ..color = color;
+          ..color = color,
+        _backgroundPaint = Paint()..color = backgroundColor;
 
   final Color color;
+  final Color backgroundColor;
   final bool is24HourFormat;
   final Paint _paint;
+  final Paint _backgroundPaint;
   final _path = Path();
   final int _num;
   final List<TextPainter> _textPainters;
@@ -71,6 +92,8 @@ class _Painter extends CustomPainter {
   static int _getSkipNum(ClockType type) {
     switch (type) {
       case ClockType.second:
+        // ignore: avoid_returning_null
+        return null;
       case ClockType.minute:
         return 10;
       case ClockType.hour:
@@ -90,7 +113,8 @@ class _Painter extends CustomPainter {
           type: type,
           is24HourFormat: is24HourFormat,
         ), (i) {
-      if (i % _getSkipNum(type) != 0) {
+      final getSkipNum = _getSkipNum(type);
+      if (getSkipNum == null || i % getSkipNum != 0) {
         return null;
       }
       return TextPainter(
@@ -109,20 +133,21 @@ class _Painter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final radius = size.width / 2;
     final center = Offset(radius, radius);
-    const gageRatio = 0.9;
+    const gageRatioMin = 0.9;
+    const gageRatioMax = 0.95;
     const textRatio = 0.8;
 
-    canvas.drawCircle(center, radius, _paint);
+    canvas.drawCircle(center, radius, _backgroundPaint);
     for (final i in List.generate(_num, (i) => i)) {
       final radian = 2 * pi * i / _num - pi / 2;
       _path
         ..moveTo(
-          radius * cos(radian) + center.dx,
-          radius * sin(radian) + center.dy,
+          radius * cos(radian) * gageRatioMax + center.dx,
+          radius * sin(radian) * gageRatioMax + center.dy,
         )
         ..lineTo(
-          radius * cos(radian) * gageRatio + center.dx,
-          radius * sin(radian) * gageRatio + center.dy,
+          radius * cos(radian) * gageRatioMin + center.dx,
+          radius * sin(radian) * gageRatioMin + center.dy,
         );
       canvas.drawPath(_path, _paint);
 
@@ -146,5 +171,6 @@ class _Painter extends CustomPainter {
   @override
   bool shouldRepaint(_Painter oldDelegate) =>
       oldDelegate.color != color ||
+      oldDelegate.backgroundColor != backgroundColor ||
       oldDelegate.is24HourFormat != is24HourFormat;
 }
