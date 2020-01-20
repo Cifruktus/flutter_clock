@@ -36,15 +36,18 @@ class ClockText extends StatelessWidget {
     return 0;
   }
 
-  Color get _textColor {
+  Color _textColor(BuildContext context) {
+    final isLight = Theme.of(context).brightness == Brightness.light;
     switch (type) {
       case ClockType.hour:
-        return const Color(0xFF41ACB7);
+        return isLight ? const Color(0xFF41ACB7) : const Color(0xFF3A2D95);
       case ClockType.minute:
-        return const Color(0xFF6EBCC3);
+        return isLight ? const Color(0xFF6EBCC3) : const Color(0xFF5C5495);
       case ClockType.second:
-        return const Color(0xFF90D4D9);
+        return isLight ? const Color(0xFF90D4D9) : const Color(0xFF938BC6);
     }
+    assert(false, 'invalid type: $type');
+    return null;
   }
 
   TextStyle _baseTextStyle(BuildContext context) {
@@ -56,6 +59,8 @@ class ClockText extends StatelessWidget {
       case ClockType.second:
         return theme.body1;
     }
+    assert(false, 'invalid type: $type');
+    return null;
   }
 
   ShapeBorder get _shapeBorder {
@@ -68,12 +73,15 @@ class ClockText extends StatelessWidget {
       case ClockType.second:
         return const StadiumBorder();
     }
+    assert(false, 'invalid type: $type');
+    return null;
   }
 
   @override
   Widget build(BuildContext context) {
     final value = _getValue(context);
     return Card(
+      color: Colors.white,
       elevation: 0,
       shape: _shapeBorder,
       child: AnimatedSwitcher(
@@ -83,7 +91,7 @@ class ClockText extends StatelessWidget {
           key: ValueKey(value),
           style: _baseTextStyle(context).copyWith(
             fontWeight: FontWeight.bold,
-            color: _textColor,
+            color: _textColor(context),
           ),
         ),
         transitionBuilder: (child, animation) {

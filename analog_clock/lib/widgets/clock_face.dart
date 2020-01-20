@@ -23,6 +23,8 @@ class ClockFace extends StatelessWidget {
       case ClockType.second:
         return 0.48;
     }
+    assert(false, 'invalid type: $type');
+    return 0;
   }
 
   @override

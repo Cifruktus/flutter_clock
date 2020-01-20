@@ -26,6 +26,8 @@ class WeatherText extends StatelessWidget {
       case WeatherCondition.windy:
         return FontAwesomeIcons.wind;
     }
+    assert(false, 'invalid condition: $condition');
+    return null;
   }
 
   @override
