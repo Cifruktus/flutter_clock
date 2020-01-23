@@ -18,7 +18,6 @@ class _Painter extends CustomPainter {
   }) : _paint = Paint()..color = color;
   final Color color;
   final Paint _paint;
-  final _path = Path();
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -27,7 +26,8 @@ class _Painter extends CustomPainter {
     const arrowXRatio = 0.05;
     const arrowYRatio = 0.08;
     const widthRatio = 0.01;
-    _path
+
+    final path = Path()
       ..moveTo(center.dx, 0)
       ..relativeLineTo(-radius * arrowXRatio, radius * arrowYRatio)
       ..relativeLineTo(radius * arrowXRatio - radius * widthRatio, 0)
@@ -36,7 +36,7 @@ class _Painter extends CustomPainter {
       ..relativeLineTo(0, -size.height)
       ..relativeLineTo(radius * arrowXRatio - radius * widthRatio, 0);
 
-    canvas.drawPath(_path, _paint);
+    canvas.drawPath(path, _paint);
   }
 
   @override

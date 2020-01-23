@@ -71,7 +71,6 @@ class _Painter extends CustomPainter {
   final bool is24HourFormat;
   final Paint _paint;
   final Paint _backgroundPaint;
-  final _path = Path();
   final int _num;
   final List<TextPainter> _textPainters;
   final ClockType type;
@@ -142,7 +141,7 @@ class _Painter extends CustomPainter {
     canvas.drawCircle(center, radius, _backgroundPaint);
     for (final i in List.generate(_num, (i) => i)) {
       final radian = 2 * pi * i / _num - pi / 2;
-      _path
+      final path = Path()
         ..moveTo(
           radius * cos(radian) * gageRatioMax + center.dx,
           radius * sin(radian) * gageRatioMax + center.dy,
@@ -151,7 +150,7 @@ class _Painter extends CustomPainter {
           radius * cos(radian) * gageRatioMin + center.dx,
           radius * sin(radian) * gageRatioMin + center.dy,
         );
-      canvas.drawPath(_path, _paint);
+      canvas.drawPath(path, _paint);
 
       final textPainter = _textPainters[i];
       if (textPainter != null) {
