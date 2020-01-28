@@ -51,11 +51,11 @@ class TimerModel extends ChangeNotifier {
         Tween(
           begin: -2 *
               pi *
-              (now.hour % 12 * 60 + now.minute + now.second / 60) /
+              (now.hour % 24 * 60 + now.minute + now.second / 60) /
               (60 * _get12Or24),
           end: -2 *
               pi *
-              (now.hour % 12 * 60 + now.minute + (now.second + 1) / 60) /
+              (now.hour % 24 * 60 + now.minute + (now.second + 1) / 60) /
               (60 * _get12Or24),
         ),
       );
